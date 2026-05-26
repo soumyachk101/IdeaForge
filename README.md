@@ -1,6 +1,15 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/soumyachk101/IdeaForge/main/assets/banner.png" alt="IdeaForge Banner" width="600">
-</p>
+<h1 align="center">
+<pre>
+ ___                   _____                    
+|_  |                 |  ___|                   
+  | | __ _  __ _  __ _| |__ _ __ __ _  ___ ___  
+  | |/ _` |/ _` |/ _` |  __| '__/ _` |/ __/ _ \ 
+  | | (_| | (_| | (_| | |__| | | (_| | (_|  __/ 
+  \_/\__,_|\__, |\__,_\____/_|  \__,_|\___\___| 
+             __/ |                               
+            |___/                                
+</pre>
+</h1>
 
 <p align="center">
   <strong>Multi-Agent Micro-SaaS Idea Discovery Engine</strong><br>
