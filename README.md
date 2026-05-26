@@ -42,9 +42,9 @@ IdeaForge is an **AI-powered multi-agent system** that discovers monetizable mic
 > **3 AI agents working 24/7** — one watches the market, one cross-references the data, and one writes the business plan.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/⚡_Real--time_Trend_Scraping-4_sources-blueviolet?style=flat-square" alt="Trend Scraping">
-  <img src="https://img.shields.io/badge/🧠_RAG_Knowledge_Matching-Hybrid_Search-orange?style=flat-square" alt="RAG Matching">
-  <img src="https://img.shields.io/badge/💰_Business_Proposals-Actionable_Outputs-green?style=flat-square" alt="Proposals">
+  <img src="https://img.shields.io/badge/Real--time_Trend_Scraping-4_sources-blueviolet?style=flat-square" alt="Trend Scraping">
+  <img src="https://img.shields.io/badge/RAG_Knowledge_Matching-Hybrid_Search-orange?style=flat-square" alt="RAG Matching">
+  <img src="https://img.shields.io/badge/Business_Proposals-Actionable_Outputs-green?style=flat-square" alt="Proposals">
 </p>
 
 ---
@@ -53,39 +53,46 @@ IdeaForge is an **AI-powered multi-agent system** that discovers monetizable mic
 
 ```mermaid
 flowchart LR
-    subgraph INPUT["🎯 User Input"]
-        A[Niche Selection<br/>e.g. "Developer Tools"]
+    subgraph INPUT["User Input"]
+        A["Niche Selection"]
     end
 
-    subgraph AGENTS["🤖 CrewAI Multi-Agent Pipeline"]
-        B["🕵️ Trend Scraper<br/><i>Scrapes 4 sources</i>"]
-        C["🧠 Synthesizer<br/><i>RAG gap analysis</i>"]
-        D["💰 VC Advisor<br/><i>Business proposals</i>"]
+    subgraph AGENTS["CrewAI Multi-Agent Pipeline"]
+        B["Trend Scraper - Scrapes 4 sources"]
+        C["Synthesizer - RAG gap analysis"]
+        D["VC Advisor - Business proposals"]
     end
 
-    subgraph SOURCES["📡 Data Sources"]
-        E[Product Hunt<br/>GraphQL API]
-        F[Hacker News<br/>Firebase API]
-        G[Reddit<br/>PRAW + 5 subs]
-        H[Indie Hackers<br/>HTML Scraping]
+    subgraph SOURCES["Data Sources"]
+        E["Product Hunt - GraphQL API"]
+        F["Hacker News - Firebase API"]
+        G["Reddit - PRAW + 5 subs"]
+        H["Indie Hackers - HTML Scraping"]
     end
 
-    subgraph RAG["📚 Knowledge Base"]
-        I[(ChromaDB<br/>Vector Store)]
-        J[BM25<br/>Keyword Search]
-        K[7 Monetization<br/>Frameworks]
-        L[20 Pain<br/>Points]
-        M[12 Case<br/>Studies]
+    subgraph RAG["Knowledge Base"]
+        I[("ChromaDB Vector Store")]
+        J["BM25 Keyword Search"]
+        K["7 Monetization Frameworks"]
+        L["20 Pain Points"]
+        M["12 Case Studies"]
     end
 
-    subgraph OUTPUT["📄 Output"]
-        N[3-5 Actionable<br/>Micro-SaaS Proposals]
+    subgraph OUTPUT["Output"]
+        N["3-5 Actionable Micro-SaaS Proposals"]
     end
 
     A --> B
     B --> C --> D
-    E & F & G & H --> B
-    I & J & K & L & M --> C
+    E --> B
+    F --> B
+    G --> B
+    H --> B
+    I --> C
+    J --> C
+    K --> C
+    L --> C
+    M --> C
     D --> N
 
     style A fill:#4CAF50,stroke:#388E3C,color:#fff
@@ -99,13 +106,13 @@ flowchart LR
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 User
-    participant A1 as 🕵️ Trend Scraper
-    participant A2 as 🧠 Synthesizer
-    participant A3 as 💰 VC Advisor
-    participant DB as 📚 ChromaDB
+    participant U as User
+    participant A1 as Trend Scraper
+    participant A2 as Synthesizer
+    participant A3 as VC Advisor
+    participant DB as ChromaDB
 
-    U->>A1: Select niche (e.g. "Developer Tools")
+    U->>A1: Select niche
     activate A1
     A1->>A1: Scrape Product Hunt
     A1->>A1: Scrape Hacker News
@@ -137,43 +144,49 @@ sequenceDiagram
 
 ```mermaid
 graph TB
-    subgraph FRONTEND["🖥️ Frontend — Next.js 14"]
-        F1[Generate Page<br/><i>SSE streaming</i>]
-        F2[Ideas Gallery]
-        F3[Trends Browser]
-        F4[Knowledge Search]
-        F5[API Client<br/><i>lib/api.ts</i>]
-        F6[Next.js Proxy<br/><i>/api/* → :8000</i>]
-        F1 & F2 & F3 & F4 --> F5 --> F6
+    subgraph FRONTEND["Frontend - Next.js 14"]
+        F1["Generate Page - SSE streaming"]
+        F2["Ideas Gallery"]
+        F3["Trends Browser"]
+        F4["Knowledge Search"]
+        F5["API Client - lib/api.ts"]
+        F6["Next.js Proxy - /api/* to :8000"]
+        F1 --> F5
+        F2 --> F5
+        F3 --> F5
+        F4 --> F5
+        F5 --> F6
     end
 
-    subgraph BACKEND["⚡ Backend — FastAPI + CrewAI"]
-        B1[FastAPI App<br/><i>CORS + Lifespan</i>]
-        B2[Ideas Route<br/><i>SSE stream</i>]
-        B3[Trends Route]
-        B4[RAG Route]
-        B1 --> B2 & B3 & B4
+    subgraph BACKEND["Backend - FastAPI + CrewAI"]
+        B1["FastAPI App - CORS + Lifespan"]
+        B2["Ideas Route - SSE stream"]
+        B3["Trends Route"]
+        B4["RAG Route"]
+        B1 --> B2
+        B1 --> B3
+        B1 --> B4
 
         subgraph CREWAI["CrewAI Orchestration"]
-            C1["Trend Scraper<br/>Agent"]
-            C2["Synthesizer<br/>Agent"]
-            C3["VC Advisor<br/>Agent"]
+            C1["Trend Scraper Agent"]
+            C2["Synthesizer Agent"]
+            C3["VC Advisor Agent"]
             C1 --> C2 --> C3
         end
 
         B2 --> CREWAI
     end
 
-    subgraph DATA["💾 Data Layer"]
-        D1[(ChromaDB<br/>4 collections)]
-        D2[Scrapers<br/>HN · Reddit · PH · IH]
-        D3[BM25 Index]
-        D4[SentenceTransformers<br/>all-MiniLM-L6-v2]
+    subgraph DATA["Data Layer"]
+        D1[("ChromaDB - 4 collections")]
+        D2["Scrapers - HN / Reddit / PH / IH"]
+        D3["BM25 Index"]
+        D4["SentenceTransformers - all-MiniLM-L6-v2"]
     end
 
-    subgraph LLM["🤖 LLM Layer"]
-        L1[Ollama<br/><i>Local LLM</i>]
-        L2[Anthropic<br/><i>Cloud API</i>]
+    subgraph LLM["LLM Layer"]
+        L1["Ollama - Local LLM"]
+        L2["Anthropic - Cloud API"]
     end
 
     F6 -->|HTTP + SSE| B1
@@ -194,34 +207,14 @@ graph TB
 
 ## Tech Stack
 
-```mermaid
-mindmap
-  root((IdeaForge))
-    Frontend
-      Next.js 14
-      TypeScript
-      Tailwind CSS
-      SSE Streaming
-    Backend
-      FastAPI
-      CrewAI
-      Pydantic
-      uvicorn
-    AI / ML
-      Ollama
-      Anthropic Claude
-      SentenceTransformers
-      ChromaDB
-      BM25 + RRF
-    Scrapers
-      Product Hunt GraphQL
-      Hacker News API
-      Reddit PRAW
-      Indie Hackers HTML
-    Package Mgmt
-      uv (Python)
-      npm (Node.js)
-```
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS | Dashboard + SSE streaming |
+| **Backend** | FastAPI, CrewAI, Pydantic, uvicorn | API + multi-agent orchestration |
+| **AI / ML** | Ollama, Anthropic Claude, SentenceTransformers, ChromaDB | LLM serving, embeddings, vector DB |
+| **Scrapers** | httpx, PRAW, BeautifulSoup4, Product Hunt GraphQL | 4-source trend scraping |
+| **Hybrid Search** | BM25 + Reciprocal Rank Fusion | Vector + keyword search merging |
+| **Package Mgmt** | uv (Python), npm (Node.js) | Fast deterministic installs |
 
 ---
 
@@ -236,7 +229,7 @@ mindmap
 | uv | `uv --version` | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | Ollama | `ollama --version` | [ollama.ai](https://ollama.ai) |
 
-### 1. Clone & Setup
+### 1. Clone and Setup
 
 ```bash
 git clone https://github.com/soumyachk101/IdeaForge.git
@@ -266,22 +259,22 @@ Done! Total: 26 documents in 3 collections
 ### 3. Start Everything
 
 ```bash
-# Terminal 1 — Backend
+# Terminal 1 - Backend
 cd backend
 uv run uvicorn api.main:app --reload --host 127.0.0.1 --port 8000
 
-# Terminal 2 — Ollama
+# Terminal 2 - Ollama
 ollama pull deepseek-coder-v2
 ollama serve
 
-# Terminal 3 — Frontend
+# Terminal 3 - Frontend
 cd frontend
 npm install && npm run dev
 ```
 
 ### 4. Generate Ideas
 
-Open **http://localhost:3000** → Select a niche → Click **Generate Ideas** → Watch the 3 agents work in real-time via SSE streaming.
+Open **http://localhost:3000** -> Select a niche -> Click **Generate Ideas** -> Watch the 3 agents work in real-time via SSE streaming.
 
 ---
 
@@ -293,7 +286,7 @@ graph LR
         direction TB
         H["GET /api/health"]
         S["GET /api/stats"]
-        IG["POST /api/ideas/generate<br/><i>SSE stream</i>"]
+        IG["POST /api/ideas/generate - SSE"]
         IL["GET /api/ideas"]
         IID["GET /api/ideas/:id"]
         TL["GET /api/trends"]
@@ -301,7 +294,7 @@ graph LR
         RQ["POST /api/rag/query"]
         RI["POST /api/rag/ingest/seed"]
         RB["GET /api/rag/browse/:collection"]
-        DOC["GET /docs<br/><i>Swagger UI</i>"]
+        DOC["GET /docs - Swagger UI"]
     end
 
     style H fill:#4CAF50,color:#fff
@@ -347,19 +340,22 @@ curl -X POST http://127.0.0.1:8000/api/rag/query \
 
 ```mermaid
 flowchart TB
-    Q["🔍 Query<br/><i>developer tools for log analysis</i>"]
+    Q["Query: developer tools for log analysis"]
 
     subgraph SEARCH["Dual Search"]
-        VS["Vector Search<br/><i>ChromaDB cosine similarity</i>"]
-        BM["BM25 Search<br/><i>TF-IDF keyword matching</i>"]
+        VS["Vector Search - ChromaDB cosine similarity"]
+        BM["BM25 Search - TF-IDF keyword matching"]
     end
 
-    FUSION["⚡ Reciprocal Rank Fusion<br/><i>score = Σ 1/(k + rank)</i>"]
+    FUSION["Reciprocal Rank Fusion - score = sum of 1/(k+rank)"]
 
-    RANK["📊 Ranked Results"]
+    RANK["Ranked Results"]
 
-    Q --> VS & BM
-    VS & BM --> FUSION --> RANK
+    Q --> VS
+    Q --> BM
+    VS --> FUSION
+    BM --> FUSION
+    FUSION --> RANK
 
     style Q fill:#4CAF50,stroke:#388E3C,color:#fff
     style VS fill:#2196F3,stroke:#1565C0,color:#fff
@@ -374,7 +370,7 @@ flowchart TB
 |------------|------|-------------|
 | `monetization_frameworks` | 7 | Freemium, API-as-a-service, Subscription, etc. |
 | `pain_points` | 12 | "I wish there was a tool that..." complaints |
-| `startup_case_studies` | 7 | Real micro-SaaS with revenue & tech stacks |
+| `startup_case_studies` | 7 | Real micro-SaaS with revenue and tech stacks |
 
 ---
 
@@ -382,21 +378,29 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    ENV[".env<br/><i>LLM_PROVIDER</i>"] --> CONFIG["config.py<br/><i>reads env</i>"]
-    CONFIG --> CLIENT["ollama_client.py<br/><i>get_crewai_llm()</i>"]
-    CLIENT --> AGENT["CrewAI Agent<br/><i>.llm = LLM()</i>"]
+    ENV[".env - LLM_PROVIDER"] --> CONFIG["config.py - reads env"]
+    CONFIG --> CLIENT["ollama_client.py - get_crewai_llm"]
+    CLIENT --> AGENT["CrewAI Agent .llm = LLM"]
 
     subgraph PROVIDERS["Supported Providers"]
-        O["🖥️ Ollama<br/>deepseek-coder-v2<br/>llama3 · mistral"]
-        A["☁️ Anthropic<br/>claude-sonnet-4"]
+        O["Ollama - deepseek-coder-v2 / llama3 / mistral"]
+        A["Anthropic - claude-sonnet-4"]
     end
 
-    CLIENT --> O & A
+    CLIENT --> O
+    CLIENT --> A
 
     style ENV fill:#607D8B,color:#fff
     style O fill:#4CAF50,stroke:#388E3C,color:#fff
     style A fill:#2196F3,stroke:#1565C0,color:#fff
 ```
+
+| Provider | Model | Use Case |
+|----------|-------|----------|
+| Ollama | `deepseek-coder-v2` | Best for local dev (coding) |
+| Ollama | `llama3` | Good general purpose |
+| Ollama | `mistral` | Fast, decent quality |
+| Anthropic | `claude-sonnet-4` | Production quality |
 
 ---
 
@@ -404,59 +408,59 @@ flowchart LR
 
 ```
 IdeaForge/
-│
-├── backend/                          # Python backend
-│   ├── pyproject.toml                # Dependencies & project config
-│   ├── .env.example                  # Environment variables template
-│   ├── config.py                     # Centralized configuration
-│   ├── main.py                       # CLI: serve | ingest | generate | scrape
-│   │
-│   ├── agents/                       # CrewAI 3-agent pipeline
-│   │   ├── crew.py                   #   └─ Orchestrates sequential flow
-│   │   ├── trend_scraper.py          #   └─ Agent 1: scrapes 4 sources
-│   │   ├── synthesizer.py            #   └─ Agent 2: RAG gap analysis
-│   │   └── vc_agent.py               #   └─ Agent 3: business proposals
-│   │
-│   ├── scrapers/                     # Data source scrapers
-│   │   ├── base.py                   #   └─ TrendData model + BaseScraper
-│   │   ├── hacker_news.py            #   └─ HN Firebase API
-│   │   ├── reddit.py                 #   └─ PRAW (5 subreddits)
-│   │   ├── product_hunt.py           #   └─ GraphQL API + fallback
-│   │   └── indie_hackers.py          #   └─ BeautifulSoup scraping
-│   │
-│   ├── rag/                          # RAG pipeline
-│   │   ├── embedder.py               #   └─ SentenceTransformers (MPS/CPU)
-│   │   ├── chroma_client.py          #   └─ ChromaDB (4 collections)
-│   │   ├── retriever.py              #   └─ Hybrid vector+BM25+RRF
-│   │   ├── ingest.py                 #   └─ Seed data ingestion
-│   │   └── seed_data/                #   └─ Pre-built knowledge base
-│   │
-│   ├── llm/                          # LLM layer
-│   │   ├── ollama_client.py          #   └─ Ollama + Anthropic + CrewAI
-│   │   └── prompts.py                #   └─ System prompts for agents
-│   │
-│   ├── tools/                        # CrewAI tools
-│   │   ├── scraper_tools.py          #   └─ Scrapers as BaseTool
-│   │   └── rag_tools.py              #   └─ RAG as BaseTool
-│   │
-│   └── api/                          # FastAPI backend
-│       ├── main.py                   #   └─ App + CORS + lifespan
-│       ├── models.py                 #   └─ Pydantic models
-│       └── routes/
-│           ├── health.py             #   └─ /api/health, /api/stats
-│           ├── ideas.py              #   └─ /api/ideas/generate (SSE)
-│           ├── trends.py             #   └─ /api/trends/scrape
-│           └── rag.py                #   └─ /api/rag/query, /browse
-│
-└── frontend/                         # Next.js 14 dashboard
-    ├── next.config.ts                # API proxy to :8000
-    ├── lib/api.ts                    # API client
-    └── app/
-        ├── layout.tsx                # Navigation + layout
-        ├── page.tsx                  # Generate (SSE streaming)
-        ├── ideas/                    # Ideas gallery + detail
-        ├── trends/page.tsx           # Trend browser
-        └── knowledge/page.tsx        # RAG search + browse
+|
++-- backend/                          # Python backend
+|   +-- pyproject.toml                # Dependencies & project config
+|   +-- .env.example                  # Environment variables template
+|   +-- config.py                     # Centralized configuration
+|   +-- main.py                       # CLI: serve | ingest | generate | scrape
+|   |
+|   +-- agents/                       # CrewAI 3-agent pipeline
+|   |   +-- crew.py                   #   Orchestrates sequential flow
+|   |   +-- trend_scraper.py          #   Agent 1: scrapes 4 sources
+|   |   +-- synthesizer.py            #   Agent 2: RAG gap analysis
+|   |   +-- vc_agent.py               #   Agent 3: business proposals
+|   |
+|   +-- scrapers/                     # Data source scrapers
+|   |   +-- base.py                   #   TrendData model + BaseScraper
+|   |   +-- hacker_news.py            #   HN Firebase API
+|   |   +-- reddit.py                 #   PRAW (5 subreddits)
+|   |   +-- product_hunt.py           #   GraphQL API + fallback
+|   |   +-- indie_hackers.py          #   BeautifulSoup scraping
+|   |
+|   +-- rag/                          # RAG pipeline
+|   |   +-- embedder.py               #   SentenceTransformers (MPS/CPU)
+|   |   +-- chroma_client.py          #   ChromaDB (4 collections)
+|   |   +-- retriever.py              #   Hybrid vector+BM25+RRF
+|   |   +-- ingest.py                 #   Seed data ingestion
+|   |   +-- seed_data/                #   Pre-built knowledge base
+|   |
+|   +-- llm/                          # LLM layer
+|   |   +-- ollama_client.py          #   Ollama + Anthropic + CrewAI
+|   |   +-- prompts.py                #   System prompts for agents
+|   |
+|   +-- tools/                        # CrewAI tools
+|   |   +-- scraper_tools.py          #   Scrapers as BaseTool
+|   |   +-- rag_tools.py              #   RAG as BaseTool
+|   |
+|   +-- api/                          # FastAPI backend
+|       +-- main.py                   #   App + CORS + lifespan
+|       +-- models.py                 #   Pydantic models
+|       +-- routes/
+|           +-- health.py             #   /api/health, /api/stats
+|           +-- ideas.py              #   /api/ideas/generate (SSE)
+|           +-- trends.py             #   /api/trends/scrape
+|           +-- rag.py                #   /api/rag/query, /browse
+|
++-- frontend/                         # Next.js 14 dashboard
+    +-- next.config.ts                # API proxy to :8000
+    +-- lib/api.ts                    # API client
+    +-- app/
+        +-- layout.tsx                # Navigation + layout
+        +-- page.tsx                  # Generate (SSE streaming)
+        +-- ideas/                    # Ideas gallery + detail
+        +-- trends/page.tsx           # Trend browser
+        +-- knowledge/page.tsx        # RAG search + browse
 ```
 
 ---
@@ -527,13 +531,13 @@ uv run uvicorn api.main:app --reload
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LLM_PROVIDER` | `ollama` | `"ollama"` or `"anthropic"` |
+| `LLM_PROVIDER` | `ollama` | `ollama` or `anthropic` |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama server URL |
 | `OLLAMA_MODEL` | `deepseek-coder-v2` | Ollama model name |
-| `ANTHROPIC_API_KEY` | — | Only if `LLM_PROVIDER=anthropic` |
-| `REDDIT_CLIENT_ID` | — | Reddit API credentials |
-| `REDDIT_CLIENT_SECRET` | — | Reddit API credentials |
-| `PRODUCT_HUNT_TOKEN` | — | PH GraphQL API token |
+| `ANTHROPIC_API_KEY` | -- | Only if LLM_PROVIDER=anthropic |
+| `REDDIT_CLIENT_ID` | -- | Reddit API credentials |
+| `REDDIT_CLIENT_SECRET` | -- | Reddit API credentials |
+| `PRODUCT_HUNT_TOKEN` | -- | PH GraphQL API token |
 | `CHROMA_PATH` | `.ideaforge_data/chroma` | ChromaDB storage path |
 | `EMBEDDING_MODEL` | `all-MiniLM-L6-v2` | Sentence-transformers model |
 | `API_HOST` | `127.0.0.1` | Backend host |
