@@ -51,58 +51,37 @@ IdeaForge is an **AI-powered multi-agent system** that discovers monetizable mic
 
 ## How It Works
 
+### High-Level Data Flow
+
 ```mermaid
-flowchart LR
-    subgraph INPUT["User Input"]
-        A["Niche Selection"]
-    end
+graph LR
+    A["User selects niche"] --> B["Trend Scraper"]
+    B --> C["Synthesizer"]
+    C --> D["VC Advisor"]
+    D --> E["Business Proposals"]
 
-    subgraph AGENTS["CrewAI Multi-Agent Pipeline"]
-        B["Trend Scraper - Scrapes 4 sources"]
-        C["Synthesizer - RAG gap analysis"]
-        D["VC Advisor - Business proposals"]
-    end
+    F["Product Hunt"] --> B
+    G["Hacker News"] --> B
+    H["Reddit"] --> B
+    I["Indie Hackers"] --> B
 
-    subgraph SOURCES["Data Sources"]
-        E["Product Hunt - GraphQL API"]
-        F["Hacker News - Firebase API"]
-        G["Reddit - PRAW + 5 subs"]
-        H["Indie Hackers - HTML Scraping"]
-    end
-
-    subgraph RAG["Knowledge Base"]
-        I[("ChromaDB Vector Store")]
-        J["BM25 Keyword Search"]
-        K["7 Monetization Frameworks"]
-        L["20 Pain Points"]
-        M["12 Case Studies"]
-    end
-
-    subgraph OUTPUT["Output"]
-        N["3-5 Actionable Micro-SaaS Proposals"]
-    end
-
-    A --> B
-    B --> C --> D
-    E --> B
-    F --> B
-    G --> B
-    H --> B
-    I --> C
-    J --> C
-    K --> C
-    L --> C
-    M --> C
-    D --> N
+    J["ChromaDB"] --> C
+    K["BM25 Index"] --> C
 
     style A fill:#4CAF50,stroke:#388E3C,color:#fff
     style B fill:#2196F3,stroke:#1565C0,color:#fff
     style C fill:#FF9800,stroke:#E65100,color:#fff
     style D fill:#9C27B0,stroke:#6A1B9A,color:#fff
-    style N fill:#4CAF50,stroke:#388E3C,color:#fff
+    style E fill:#4CAF50,stroke:#388E3C,color:#fff
+    style F fill:#607D8B,stroke:#37474F,color:#fff
+    style G fill:#607D8B,stroke:#37474F,color:#fff
+    style H fill:#607D8B,stroke:#37474F,color:#fff
+    style I fill:#607D8B,stroke:#37474F,color:#fff
+    style J fill:#607D8B,stroke:#37474F,color:#fff
+    style K fill:#607D8B,stroke:#37474F,color:#fff
 ```
 
-### Pipeline Flow
+### Agent Pipeline Sequence
 
 ```mermaid
 sequenceDiagram
@@ -116,15 +95,15 @@ sequenceDiagram
     activate A1
     A1->>A1: Scrape Product Hunt
     A1->>A1: Scrape Hacker News
-    A1->>A1: Scrape Reddit (5 subs)
+    A1->>A1: Scrape Reddit
     A1->>A1: Scrape Indie Hackers
     A1-->>A2: Trend report + pain points
     deactivate A1
 
     activate A2
-    A2->>DB: Vector search (cosine similarity)
+    A2->>DB: Vector search
     A2->>DB: BM25 keyword search
-    DB-->>A2: Matching frameworks + case studies
+    DB-->>A2: Frameworks + case studies
     A2->>A2: Reciprocal Rank Fusion
     A2-->>A3: Ranked opportunities
     deactivate A2
@@ -132,10 +111,30 @@ sequenceDiagram
     activate A3
     A3->>A3: Generate product name
     A3->>A3: Select tech stack
-    A3->>A3: Define pricing ($10-$50/mo)
+    A3->>A3: Define pricing
     A3->>A3: Create GTM strategy
-    A3-->>U: 3-5 actionable proposals (SSE stream)
+    A3-->>U: 3-5 proposals via SSE
     deactivate A3
+```
+
+### Agent Execution State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> TrendScraping : User selects niche
+    TrendScraping --> TrendComplete : All 4 sources scraped
+    TrendComplete --> RAGSearch : Pass trends to Synthesizer
+    RAGSearch --> RAGComplete : Hybrid search done
+    RAGComplete --> ProposalGen : Pass insights to VC Advisor
+    ProposalGen --> Streaming : Generate proposals
+    Streaming --> Complete : All proposals sent
+    Complete --> [*]
+
+    TrendScraping --> Error : Scraper fails
+    RAGSearch --> Error : ChromaDB fails
+    ProposalGen --> Error : LLM fails
+    Error --> Idle : Reset
 ```
 
 ---
@@ -213,6 +212,61 @@ IDEAFORGE ARCHITECTURE
 +-----------------------------------------------------------------------+
 ```
 
+### System Component Diagram
+
+```mermaid
+graph TB
+    subgraph FE["Frontend - Next.js 14"]
+        P1["Generate Page"]
+        P2["Ideas Gallery"]
+        P3["Trends Browser"]
+        P4["Knowledge Search"]
+        P1 --> API["API Client"]
+        P2 --> API
+        P3 --> API
+        P4 --> API
+        API --> PROXY["Next.js Proxy to :8000"]
+    end
+
+    subgraph BE["Backend - FastAPI + CrewAI"]
+        PROXY --> FAST["FastAPI App"]
+        FAST --> R1["Ideas Route"]
+        FAST --> R2["Trends Route"]
+        FAST --> R3["RAG Route"]
+
+        subgraph CREW["CrewAI Agents"]
+            A1["Trend Scraper"]
+            A2["Synthesizer"]
+            A3["VC Advisor"]
+            A1 --> A2 --> A3
+        end
+
+        R1 --> CREW
+    end
+
+    subgraph DATA["Data Layer"]
+        A1 --> SC["Scrapers"]
+        A2 --> RAG["RAG Pipeline"]
+        SC --> S1["HN API"]
+        SC --> S2["Reddit PRAW"]
+        SC --> S3["PH GraphQL"]
+        SC --> S4["IH HTML"]
+        RAG --> DB[("ChromaDB")]
+        RAG --> BM["BM25 Index"]
+        RAG --> EM["Embeddings"]
+    end
+
+    subgraph LLM["LLM Providers"]
+        A3 --> L1["Ollama"]
+        A3 --> L2["Anthropic"]
+    end
+
+    style FE fill:#e3f2fd,stroke:#1565C0
+    style BE fill:#fff3e0,stroke:#E65100
+    style DATA fill:#f3e5f5,stroke:#6A1B9A
+    style LLM fill:#e8f5e9,stroke:#2E7D32
+```
+
 ---
 
 ## Tech Stack
@@ -286,38 +340,60 @@ npm install && npm run dev
 
 Open **http://localhost:3000** -> Select a niche -> Click **Generate Ideas** -> Watch the 3 agents work in real-time via SSE streaming.
 
+### Setup Flow
+
+```mermaid
+graph TD
+    A["Clone repo"] --> B["cd backend"]
+    B --> C["cp .env.example .env"]
+    C --> D["uv sync"]
+    D --> E["uv run python -m rag.ingest"]
+    E --> F["Start backend on :8000"]
+    F --> G["Start Ollama"]
+    G --> H["cd frontend && npm install && npm run dev"]
+    H --> I["Open localhost:3000"]
+
+    style A fill:#4CAF50,color:#fff
+    style I fill:#2196F3,color:#fff
+```
+
 ---
 
 ## API
 
+### Endpoint Map
+
 ```mermaid
-graph LR
-    subgraph ENDPOINTS["REST API Endpoints"]
-        direction TB
-        H["GET /api/health"]
-        S["GET /api/stats"]
-        IG["POST /api/ideas/generate - SSE"]
-        IL["GET /api/ideas"]
-        IID["GET /api/ideas/:id"]
-        TL["GET /api/trends"]
-        TS["POST /api/trends/scrape"]
-        RQ["POST /api/rag/query"]
-        RI["POST /api/rag/ingest/seed"]
-        RB["GET /api/rag/browse/:collection"]
-        DOC["GET /docs - Swagger UI"]
+graph TD
+    subgraph HEALTH["Health"]
+        H1["GET /api/health"]
+        H2["GET /api/stats"]
     end
 
-    style H fill:#4CAF50,color:#fff
-    style S fill:#4CAF50,color:#fff
-    style IG fill:#2196F3,color:#fff
-    style IL fill:#2196F3,color:#fff
-    style IID fill:#2196F3,color:#fff
-    style TL fill:#FF9800,color:#fff
-    style TS fill:#FF9800,color:#fff
-    style RQ fill:#9C27B0,color:#fff
-    style RI fill:#9C27B0,color:#fff
-    style RB fill:#9C27B0,color:#fff
-    style DOC fill:#607D8B,color:#fff
+    subgraph IDEAS["Ideas"]
+        I1["POST /api/ideas/generate"]
+        I2["GET /api/ideas"]
+        I3["GET /api/ideas/:id"]
+    end
+
+    subgraph TRENDS["Trends"]
+        T1["GET /api/trends"]
+        T2["POST /api/trends/scrape"]
+    end
+
+    subgraph RAG["RAG"]
+        R1["POST /api/rag/query"]
+        R2["POST /api/rag/ingest/seed"]
+        R3["GET /api/rag/browse/:col"]
+    end
+
+    DOCS["GET /docs - Swagger UI"]
+
+    style HEALTH fill:#4CAF50,color:#fff
+    style IDEAS fill:#2196F3,color:#fff
+    style TRENDS fill:#FF9800,color:#fff
+    style RAG fill:#9C27B0,color:#fff
+    style DOCS fill:#607D8B,color:#fff
 ```
 
 ### Generate Ideas (SSE Stream)
@@ -332,6 +408,26 @@ curl -N -X POST http://127.0.0.1:8000/api/ideas/generate \
 data: {"type":"start","niche":"developer tools","id":"a1b2c3d4"}
 data: {"type":"result","id":"a1b2c3d4","content":"## LogLens AI\n\n### The Problem\n..."}
 data: {"type":"done","id":"a1b2c3d4"}
+```
+
+### SSE Event Flow
+
+```mermaid
+graph LR
+    A["Client POST /api/ideas/generate"] --> B["FastAPI receives request"]
+    B --> C["CrewAI starts agents"]
+    C --> D["SSE: type=start"]
+    D --> E["Agent 1 scrapes trends"]
+    E --> F["Agent 2 searches RAG"]
+    F --> G["Agent 3 generates proposals"]
+    G --> H["SSE: type=result"]
+    H --> I["SSE: type=done"]
+    I --> J["Client renders results"]
+
+    style A fill:#2196F3,color:#fff
+    style D fill:#FF9800,color:#fff
+    style H fill:#4CAF50,color:#fff
+    style I fill:#9C27B0,color:#fff
 ```
 
 ### Search RAG Knowledge Base
@@ -349,29 +445,59 @@ curl -X POST http://127.0.0.1:8000/api/rag/query \
 ### Hybrid Retrieval Pipeline
 
 ```mermaid
-flowchart TB
-    Q["Query: developer tools for log analysis"]
-
-    subgraph SEARCH["Dual Search"]
-        VS["Vector Search - ChromaDB cosine similarity"]
-        BM["BM25 Search - TF-IDF keyword matching"]
-    end
-
-    FUSION["Reciprocal Rank Fusion - score = sum of 1/(k+rank)"]
-
-    RANK["Ranked Results"]
-
-    Q --> VS
-    Q --> BM
-    VS --> FUSION
-    BM --> FUSION
-    FUSION --> RANK
+graph TB
+    Q["Query: developer tools for log analysis"] --> VS["Vector Search"]
+    Q --> BM["BM25 Search"]
+    VS --> F["Reciprocal Rank Fusion"]
+    BM --> F
+    F --> R["Ranked Results"]
 
     style Q fill:#4CAF50,stroke:#388E3C,color:#fff
     style VS fill:#2196F3,stroke:#1565C0,color:#fff
     style BM fill:#FF9800,stroke:#E65100,color:#fff
-    style FUSION fill:#9C27B0,stroke:#6A1B9A,color:#fff
-    style RANK fill:#607D8B,stroke:#37474F,color:#fff
+    style F fill:#9C27B0,stroke:#6A1B9A,color:#fff
+    style R fill:#607D8B,stroke:#37474F,color:#fff
+```
+
+### RAG Data Model
+
+```mermaid
+classDiagram
+    class TrendData {
+        +String title
+        +String description
+        +String source
+        +List tags
+        +int upvotes
+        +String url
+    }
+
+    class Document {
+        +String id
+        +String content
+        +String title
+        +String category
+        +String source
+        +float[] embedding
+    }
+
+    class QueryResult {
+        +String document_id
+        +float score
+        +String content
+        +dict metadata
+    }
+
+    class Retriever {
+        +ChromaDB client
+        +BM25 index
+        +search(query, collection)
+        +hybrid_search(query, collection)
+    }
+
+    Document --> Retriever : indexed by
+    TrendData --> Document : converted to
+    Retriever --> QueryResult : returns
 ```
 
 ### Seed Data
@@ -386,24 +512,26 @@ flowchart TB
 
 ## LLM Configuration
 
+### Provider Selection Flow
+
 ```mermaid
-flowchart LR
-    ENV[".env - LLM_PROVIDER"] --> CONFIG["config.py - reads env"]
-    CONFIG --> CLIENT["ollama_client.py - get_crewai_llm"]
-    CLIENT --> AGENT["CrewAI Agent .llm = LLM"]
-
-    subgraph PROVIDERS["Supported Providers"]
-        O["Ollama - deepseek-coder-v2 / llama3 / mistral"]
-        A["Anthropic - claude-sonnet-4"]
-    end
-
-    CLIENT --> O
-    CLIENT --> A
+graph LR
+    ENV[".env file"] --> CONFIG["config.py"]
+    CONFIG --> CLIENT["ollama_client.py"]
+    CLIENT --> CHECK{"LLM_PROVIDER?"}
+    CHECK -->|ollama| O["Ollama Server"]
+    CHECK -->|anthropic| A["Anthropic API"]
+    O --> AGENT["CrewAI Agent"]
+    A --> AGENT
 
     style ENV fill:#607D8B,color:#fff
-    style O fill:#4CAF50,stroke:#388E3C,color:#fff
-    style A fill:#2196F3,stroke:#1565C0,color:#fff
+    style CHECK fill:#FF9800,color:#fff
+    style O fill:#4CAF50,color:#fff
+    style A fill:#2196F3,color:#fff
+    style AGENT fill:#9C27B0,color:#fff
 ```
+
+### Model Options
 
 | Provider | Model | Use Case |
 |----------|-------|----------|
