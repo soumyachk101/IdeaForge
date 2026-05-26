@@ -1,6 +1,6 @@
 """Base scraper and TrendData model."""
 from pydantic import BaseModel, Field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from abc import ABC, abstractmethod
 
@@ -14,7 +14,7 @@ class TrendData(BaseModel):
     upvotes: int = 0
     comments: List[str] = Field(default_factory=list)
     tags: List[str] = Field(default_factory=list)
-    scraped_at: datetime = Field(default_factory=datetime.utcnow)
+    scraped_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     def to_context_text(self) -> str:
         """Converts to text for RAG context."""

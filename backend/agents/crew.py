@@ -1,13 +1,15 @@
 """CrewAI crew orchestration - ties all 3 agents together."""
+import logging
 from crewai import Crew, Process, Task
 from agents.trend_scraper import create_trend_scraper_agent
 from agents.synthesizer import create_synthesizer_agent
 from agents.vc_agent import create_vc_agent
 
+logger = logging.getLogger("ideaforge.crew")
+
 
 def create_ideaforge_crew(niche: str = "developer tools") -> Crew:
     """Creates and returns the IdeaForge crew with all 3 agents."""
-
     trend_scraper = create_trend_scraper_agent()
     synthesizer = create_synthesizer_agent()
     vc_agent = create_vc_agent()
@@ -42,19 +44,20 @@ def create_ideaforge_crew(niche: str = "developer tools") -> Crew:
 
     task_refine = Task(
         description=(
-            "Take the top opportunity from the synthesizer's analysis and create a complete, "
-            "actionable micro-SaaS proposal. Include:\n"
-            "1. Problem statement with direct user quotes\n"
-            "2. Solution description\n"
-            "3. Target audience with buyer persona\n"
-            "4. Exact tech stack (frontend, backend, database, hosting)\n"
-            "5. Pricing model with specific dollar amounts\n"
-            "6. Step-by-step go-to-market strategy\n"
-            "7. Revenue projections (Year 1 and Year 2)\n"
-            "8. Competitive advantage analysis"
+            f"Take the top opportunities from the synthesizer's analysis and create complete, "
+            f"actionable micro-SaaS proposals. For each proposal include:\n"
+            f"1. Problem statement with direct user quotes\n"
+            f"2. Solution description and one-liner\n"
+            f"3. Target audience with buyer persona\n"
+            f"4. Exact tech stack (frontend, backend, database, AI/ML, hosting)\n"
+            f"5. Pricing model with specific dollar amounts ($10-$50/month range)\n"
+            f"6. MVP features (3-5 core features)\n"
+            f"7. Step-by-step go-to-market strategy\n"
+            f"8. Why this will work (evidence-based reasoning)\n\n"
+            f"Propose 3-5 ideas. Each must be achievable by a solo developer in 2-4 weeks."
         ),
         agent=vc_agent,
-        expected_output="A complete micro-SaaS business proposal in the specified format with all sections filled.",
+        expected_output="3-5 detailed micro-SaaS proposals with tech stacks, pricing, features, and GTM strategies.",
         context=[task_synthesize],
     )
 
@@ -68,18 +71,21 @@ def create_ideaforge_crew(niche: str = "developer tools") -> Crew:
     return crew
 
 
-def run_idea_generation(niche: str = "developer tools") -> str:
+def run_idea_pipeline(niche: str = "developer tools") -> str:
     """Runs the full IdeaForge pipeline and returns the result."""
+    logger.info(f"Starting idea pipeline for niche: {niche}")
     crew = create_ideaforge_crew(niche=niche)
     result = crew.kickoff(inputs={"niche": niche})
+    logger.info("Idea pipeline completed")
     return str(result)
 
 
 if __name__ == "__main__":
-    import logging
+    import sys
     logging.basicConfig(level=logging.INFO)
-    result = run_idea_generation("developer tools")
+    niche = sys.argv[1] if len(sys.argv) > 1 else "developer tools"
+    result = run_idea_pipeline(niche)
     print("\n" + "=" * 80)
-    print("IDEAFORGE RESULT")
+    print("IDEAFORGE — Generated Micro-SaaS Proposals")
     print("=" * 80)
     print(result)

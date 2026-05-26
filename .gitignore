@@ -28,6 +28,3 @@ out/
 # OS
 .DS_Store
 Thumbs.db
-
-# External repos
-zap/

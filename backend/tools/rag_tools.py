@@ -4,6 +4,26 @@ from typing import Type
 from pydantic import BaseModel, Field
 from crewai.tools import BaseTool
 
+# Lazy-initialized singletons (avoid reloading embedding model on every call)
+_chroma = None
+_embedder = None
+_retriever = None
+
+
+def _get_retriever():
+    global _chroma, _embedder, _retriever
+    if _retriever is None:
+        from rag.chroma_client import ChromaClient
+        from rag.embedder import TextEmbedder
+        from rag.retriever import HybridRetriever
+
+        _chroma = ChromaClient()
+        _embedder = TextEmbedder()
+        _retriever = HybridRetriever(_chroma, _embedder)
+        for col in ["pain_points", "monetization_frameworks", "startup_case_studies"]:
+            _retriever.build_bm25_index(col)
+    return _retriever
+
 
 class RAGQueryInput(BaseModel):
     query: str = Field(description="Search query for the RAG database")
@@ -24,31 +44,19 @@ class RAGRetrieverTool(BaseTool):
     args_schema: Type[BaseModel] = RAGQueryInput
 
     def _run(self, query: str, collection: str = "all", n_results: int = 5) -> str:
-        from rag.chroma_client import ChromaClient
-        from rag.embedder import TextEmbedder
-        from rag.retriever import HybridRetriever
+        retriever = _get_retriever()
 
-        chroma = ChromaClient()
-        embedder = TextEmbedder()
-        retriever = HybridRetriever(chroma, embedder)
-
-        # Build BM25 indexes for searched collection(s)
         collections = (
             ["pain_points", "monetization_frameworks", "startup_case_studies"]
             if collection == "all"
             else [collection]
         )
-        for col in collections:
-            retriever.build_bm25_index(col)
 
-        if collection == "all":
-            all_results = {}
-            for col in collections:
-                results = retriever.retrieve(col, query, n_results=n_results)
-                if results:
-                    all_results[col] = results
-        else:
-            all_results = {collection: retriever.retrieve(collection, query, n_results=n_results)}
+        all_results = {}
+        for col in collections:
+            results = retriever.retrieve(col, query, n_results=n_results)
+            if results:
+                all_results[col] = results
 
         # Format results for the agent
         output_parts = []

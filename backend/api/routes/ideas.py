@@ -4,7 +4,7 @@ import json
 import uuid
 import logging
 from datetime import datetime
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sse_starlette.sse import EventSourceResponse
 
 from api.models import GenerateRequest
@@ -82,7 +82,7 @@ async def list_ideas():
 async def get_idea(idea_id: str):
     """Get a generated idea by ID."""
     if idea_id not in _ideas:
-        return {"error": "Idea not found"}
+        raise HTTPException(status_code=404, detail="Idea not found")
     idea = _ideas[idea_id]
     return {
         "id": idea["id"],

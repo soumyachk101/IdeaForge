@@ -49,12 +49,8 @@ async def scrape_trends(source: str = "all", limit: int = 20):
 def _get_scrapers(source: str) -> dict:
     all_scrapers = {
         "hacker_news": HackerNewsScraper(),
-        "reddit": RedditScraper(
-            client_id=CONFIG["reddit_client_id"],
-            client_secret=CONFIG["reddit_client_secret"],
-            user_agent=CONFIG["reddit_user_agent"],
-        ),
-        "product_hunt": ProductHuntScraper(api_token=CONFIG["product_hunt_token"]),
+        "reddit": RedditScraper(),
+        "product_hunt": ProductHuntScraper(),
         "indie_hackers": IndieHackersScraper(),
     }
     if source == "all":

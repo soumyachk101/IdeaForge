@@ -1,30 +1,21 @@
 """IdeaForge FastAPI Backend."""
 from contextlib import asynccontextmanager
-from pathlib import Path
 import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from rag.chroma_client import ChromaClient
 from config import CONFIG
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ideaforge")
 
-# Globals initialized in lifespan
-chroma_client = None
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global chroma_client
     logger.info("Starting IdeaForge API...")
-    try:
-        chroma_client = ChromaClient()
-        logger.info("ChromaDB connected")
-    except Exception as e:
-        logger.error(f"ChromaDB init failed: {e}")
+    logger.info(f"  LLM provider: {CONFIG['llm_provider']}")
+    logger.info(f"  ChromaDB path: {CONFIG['chroma_path']}")
     yield
     logger.info("Shutting down IdeaForge API...")
 
