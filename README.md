@@ -313,14 +313,80 @@ graph LR
 
 ## Tech Stack
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| **Frontend** | Next.js 14, TypeScript, Tailwind CSS | Dashboard + SSE streaming |
-| **Backend** | FastAPI, CrewAI, Pydantic, uvicorn | API + multi-agent orchestration |
-| **AI / ML** | Ollama, Anthropic Claude, SentenceTransformers, ChromaDB | LLM serving, embeddings, vector DB |
-| **Scrapers** | httpx, PRAW, BeautifulSoup4, Product Hunt GraphQL | 4-source trend scraping |
-| **Hybrid Search** | BM25 + Reciprocal Rank Fusion | Vector + keyword search merging |
-| **Package Mgmt** | uv (Python), npm (Node.js) | Fast deterministic installs |
+```mermaid
+flowchart TB
+    CORE(("IdeaForge"))
+
+    CORE --- FRONT["Frontend"]
+    FRONT --- NEXT["Next.js 14"]
+    FRONT --- TS["TypeScript"]
+    FRONT --- TW["Tailwind CSS"]
+    FRONT --- SSE["SSE Streaming"]
+
+    CORE --- BACK["Backend"]
+    BACK --- FAST["FastAPI"]
+    BACK --- CREW["CrewAI"]
+    BACK --- PYD["Pydantic"]
+    BACK --- UVI["uvicorn"]
+
+    CORE --- AIML["AI / ML"]
+    AIML --- OLL["Ollama"]
+    AIML --- CLAUDE["Anthropic Claude"]
+    AIML --- ST["SentenceTransformers"]
+    AIML --- CHROMA["ChromaDB"]
+    AIML --- HYBRID["BM25 + RRF"]
+
+    CORE --- SCRAPE["Scrapers"]
+    SCRAPE --- PH["Product Hunt GraphQL"]
+    SCRAPE --- HN["Hacker News API"]
+    SCRAPE --- REDDIT["Reddit PRAW"]
+    SCRAPE --- IH["Indie Hackers HTML"]
+
+    CORE --- PKG["Package Mgmt"]
+    PKG --- UV["uv"]
+    PKG --- PY["Python"]
+    PKG --- NPM["npm"]
+    PKG --- NODE["Node.js"]
+
+    style CORE fill:#858b88,stroke:#858b88,color:#111
+
+    style FRONT fill:#090000,stroke:#090000,color:#f3f4f6
+    style NEXT fill:#090000,stroke:#090000,color:#f3f4f6
+    style TS fill:#090000,stroke:#090000,color:#f3f4f6
+    style TW fill:#090000,stroke:#090000,color:#f3f4f6
+    style SSE fill:#090000,stroke:#090000,color:#f3f4f6
+
+    style BACK fill:#5f0f3f,stroke:#5f0f3f,color:#f3f4f6
+    style FAST fill:#5f0f3f,stroke:#5f0f3f,color:#f3f4f6
+    style CREW fill:#5f0f3f,stroke:#5f0f3f,color:#f3f4f6
+    style PYD fill:#5f0f3f,stroke:#5f0f3f,color:#f3f4f6
+    style UVI fill:#5f0f3f,stroke:#5f0f3f,color:#f3f4f6
+
+    style AIML fill:#455d63,stroke:#455d63,color:#f3f4f6
+    style OLL fill:#455d63,stroke:#455d63,color:#f3f4f6
+    style CLAUDE fill:#455d63,stroke:#455d63,color:#f3f4f6
+    style ST fill:#455d63,stroke:#455d63,color:#f3f4f6
+    style CHROMA fill:#455d63,stroke:#455d63,color:#f3f4f6
+    style HYBRID fill:#455d63,stroke:#455d63,color:#f3f4f6
+
+    style SCRAPE fill:#5a351d,stroke:#5a351d,color:#f3f4f6
+    style PH fill:#5a351d,stroke:#5a351d,color:#f3f4f6
+    style HN fill:#5a351d,stroke:#5a351d,color:#f3f4f6
+    style REDDIT fill:#5a351d,stroke:#5a351d,color:#f3f4f6
+    style IH fill:#5a351d,stroke:#5a351d,color:#f3f4f6
+
+    style PKG fill:#8b0e0e,stroke:#8b0e0e,color:#f3f4f6
+    style UV fill:#8b0e0e,stroke:#8b0e0e,color:#f3f4f6
+    style PY fill:#8b0e0e,stroke:#8b0e0e,color:#f3f4f6
+    style NPM fill:#8b0e0e,stroke:#8b0e0e,color:#f3f4f6
+    style NODE fill:#8b0e0e,stroke:#8b0e0e,color:#f3f4f6
+
+    linkStyle 0,1,2,3,4 stroke:#120202,stroke-width:5px
+    linkStyle 5,6,7,8,9 stroke:#6d1048,stroke-width:5px
+    linkStyle 10,11,12,13,14,15 stroke:#4e686f,stroke-width:5px
+    linkStyle 16,17,18,19,20 stroke:#6d401f,stroke-width:5px
+    linkStyle 21,22,23,24,25 stroke:#930f0f,stroke-width:5px
+```
 
 ---
 
