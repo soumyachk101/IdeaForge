@@ -51,37 +51,58 @@ IdeaForge is an **AI-powered multi-agent system** that discovers monetizable mic
 
 ## How It Works
 
-### High-Level Data Flow
-
 ```mermaid
-graph LR
-    A["User selects niche"] --> B["Trend Scraper"]
-    B --> C["Synthesizer"]
-    C --> D["VC Advisor"]
-    D --> E["Business Proposals"]
+flowchart LR
+    subgraph INPUT["User Input"]
+        A["Niche Selection"]
+    end
 
-    F["Product Hunt"] --> B
-    G["Hacker News"] --> B
-    H["Reddit"] --> B
-    I["Indie Hackers"] --> B
+    subgraph AGENTS["CrewAI Multi-Agent Pipeline"]
+        B["Trend Scraper - Scrapes 4 sources"]
+        C["Synthesizer - RAG gap analysis"]
+        D["VC Advisor - Business proposals"]
+    end
 
-    J["ChromaDB"] --> C
-    K["BM25 Index"] --> C
+    subgraph SOURCES["Data Sources"]
+        E["Product Hunt - GraphQL API"]
+        F["Hacker News - Firebase API"]
+        G["Reddit - PRAW + 5 subs"]
+        H["Indie Hackers - HTML Scraping"]
+    end
+
+    subgraph RAG["Knowledge Base"]
+        I[("ChromaDB Vector Store")]
+        J["BM25 Keyword Search"]
+        K["7 Monetization Frameworks"]
+        L["20 Pain Points"]
+        M["12 Case Studies"]
+    end
+
+    subgraph OUTPUT["Output"]
+        N["3-5 Actionable Micro-SaaS Proposals"]
+    end
+
+    A --> B
+    B --> C --> D
+    E --> B
+    F --> B
+    G --> B
+    H --> B
+    I --> C
+    J --> C
+    K --> C
+    L --> C
+    M --> C
+    D --> N
 
     style A fill:#4CAF50,stroke:#388E3C,color:#fff
     style B fill:#2196F3,stroke:#1565C0,color:#fff
     style C fill:#FF9800,stroke:#E65100,color:#fff
     style D fill:#9C27B0,stroke:#6A1B9A,color:#fff
-    style E fill:#4CAF50,stroke:#388E3C,color:#fff
-    style F fill:#607D8B,stroke:#37474F,color:#fff
-    style G fill:#607D8B,stroke:#37474F,color:#fff
-    style H fill:#607D8B,stroke:#37474F,color:#fff
-    style I fill:#607D8B,stroke:#37474F,color:#fff
-    style J fill:#607D8B,stroke:#37474F,color:#fff
-    style K fill:#607D8B,stroke:#37474F,color:#fff
+    style N fill:#4CAF50,stroke:#388E3C,color:#fff
 ```
 
-### Agent Pipeline Sequence
+### Pipeline Flow
 
 ```mermaid
 sequenceDiagram
@@ -95,15 +116,15 @@ sequenceDiagram
     activate A1
     A1->>A1: Scrape Product Hunt
     A1->>A1: Scrape Hacker News
-    A1->>A1: Scrape Reddit
+    A1->>A1: Scrape Reddit (5 subs)
     A1->>A1: Scrape Indie Hackers
     A1-->>A2: Trend report + pain points
     deactivate A1
 
     activate A2
-    A2->>DB: Vector search
+    A2->>DB: Vector search (cosine similarity)
     A2->>DB: BM25 keyword search
-    DB-->>A2: Frameworks + case studies
+    DB-->>A2: Matching frameworks + case studies
     A2->>A2: Reciprocal Rank Fusion
     A2-->>A3: Ranked opportunities
     deactivate A2
@@ -111,160 +132,181 @@ sequenceDiagram
     activate A3
     A3->>A3: Generate product name
     A3->>A3: Select tech stack
-    A3->>A3: Define pricing
+    A3->>A3: Define pricing ($10-$50/mo)
     A3->>A3: Create GTM strategy
-    A3-->>U: 3-5 proposals via SSE
+    A3-->>U: 3-5 actionable proposals (SSE stream)
     deactivate A3
-```
-
-### Agent Execution State Machine
-
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> TrendScraping : User selects niche
-    TrendScraping --> TrendComplete : All 4 sources scraped
-    TrendComplete --> RAGSearch : Pass trends to Synthesizer
-    RAGSearch --> RAGComplete : Hybrid search done
-    RAGComplete --> ProposalGen : Pass insights to VC Advisor
-    ProposalGen --> Streaming : Generate proposals
-    Streaming --> Complete : All proposals sent
-    Complete --> [*]
-
-    TrendScraping --> Error : Scraper fails
-    RAGSearch --> Error : ChromaDB fails
-    ProposalGen --> Error : LLM fails
-    Error --> Idle : Reset
 ```
 
 ---
 
 ## Architecture
 
-```
-IDEAFORGE ARCHITECTURE
-======================
-
-+-----------------------------------------------------------------------+
-|                        FRONTEND (Next.js)                              |
-|                                                                       |
-|  +------------+  +------------+  +------------+  +-----------------+  |
-|  | Generate   |  |  Ideas     |  |  Trends    |  | Knowledge Base  |  |
-|  |  Page      |  | Gallery    |  | Browser    |  | (Search/Browse) |  |
-|  +-----+------+  +-----+------+  +-----+------+  +--------+--------+  |
-|        |               |              |                    |           |
-|        +---------------+--------------+--------------------+           |
-|                        |                                               |
-|                +-------+--------+                                      |
-|                |   API Client   |                                      |
-|                |   (lib/api.ts) |                                      |
-|                +-------+--------+                                      |
-|                        |                                               |
-|                +-------+--------+                                      |
-|                |  Next.js Proxy |                                      |
-|                | /api/* -> :8000|                                      |
-|                +-------+--------+                                      |
-+------------------------+-----------------------------------------------+
-                         |
-                         | HTTP + SSE
-                         |
-+------------------------+-----------------------------------------------+
-|                        |      BACKEND (FastAPI + CrewAI)               |
-|                +-------+--------+                                      |
-|                |   FastAPI App  |                                      |
-|                |   (api/main)   |                                      |
-|                +-------+--------+                                      |
-|                        |                                               |
-|    +-------------------+-------------------+                            |
-|    |                   |                   |                            |
-|    v                   v                   v                            |
-| +--------+    +------------+    +-------------+                        |
-| | Ideas  |    |  Trends    |    |    RAG      |                        |
-| | Route  |    |  Route     |    |   Route     |                        |
-| +---+----+    +-----+------+    +------+------+                        |
-|     |               |                    |                              |
-|     v               v                    v                              |
-| +--------------------------------------------------------------+       |
-| |                   CREWAI ORCHESTRATION                       |       |
-| |                                                              |       |
-| |  +----------+  +--------------+  +---------------------+    |       |
-| |  | Trend    |  | Synthesizer  |  |  VC/Monetization    |    |       |
-| |  | Scraper  |  | Agent        |  |  Advisor            |    |       |
-| |  | Agent    |  |              |  |                     |    |       |
-| |  +----+-----+  +------+-------+  +----------+----------+    |       |
-| |       |               |                     |               |       |
-| |       v               v                     v               |       |
-| |  +----------+  +--------------+  +---------------------+    |       |
-| |  | Scraper  |  | RAG Retriever|  |  System Prompts     |    |       |
-| |  | Tools    |  | Tool         |  |                     |    |       |
-| |  +----+-----+  +------+-------+  +---------------------+    |       |
-| +-------+---------------+--------------------------------------+       |
-|         |               |                                              |
-|         v               v                                              |
-|  +------------+  +--------------+                                      |
-|  | SCRAPERS   |  |  RAG PIPELINE|                                      |
-|  |            |  |              |                                      |
-|  | - HN API   |  | - ChromaDB   |                                      |
-|  | - Reddit   |  | - BM25       |                                      |
-|  | - PH API   |  | - Embeddings |                                      |
-|  | - IH HTML  |  | - RRF Fusion |                                      |
-|  +------------+  +--------------+                                      |
-+-----------------------------------------------------------------------+
-```
-
-### System Component Diagram
+### Full System Workflow
 
 ```mermaid
 graph TB
-    subgraph FE["Frontend - Next.js 14"]
+    subgraph FRONTEND["Frontend - Next.js 14"]
         P1["Generate Page"]
         P2["Ideas Gallery"]
         P3["Trends Browser"]
         P4["Knowledge Search"]
-        P1 --> API["API Client"]
+        P1 --> API["API Client - lib/api.ts"]
         P2 --> API
         P3 --> API
         P4 --> API
-        API --> PROXY["Next.js Proxy to :8000"]
+        API --> PROXY["Next.js Proxy /api/* to :8000"]
     end
 
-    subgraph BE["Backend - FastAPI + CrewAI"]
-        PROXY --> FAST["FastAPI App"]
+    subgraph BACKEND["Backend - FastAPI"]
+        PROXY -->|HTTP + SSE| FAST["FastAPI App"]
         FAST --> R1["Ideas Route"]
         FAST --> R2["Trends Route"]
         FAST --> R3["RAG Route"]
-
-        subgraph CREW["CrewAI Agents"]
-            A1["Trend Scraper"]
-            A2["Synthesizer"]
-            A3["VC Advisor"]
-            A1 --> A2 --> A3
-        end
-
-        R1 --> CREW
     end
 
-    subgraph DATA["Data Layer"]
-        A1 --> SC["Scrapers"]
-        A2 --> RAG["RAG Pipeline"]
-        SC --> S1["HN API"]
-        SC --> S2["Reddit PRAW"]
-        SC --> S3["PH GraphQL"]
-        SC --> S4["IH HTML"]
-        RAG --> DB[("ChromaDB")]
-        RAG --> BM["BM25 Index"]
-        RAG --> EM["Embeddings"]
+    subgraph CREW["CrewAI Orchestration"]
+        R1 --> A1["Trend Scraper Agent"]
+        R1 --> A2["Synthesizer Agent"]
+        R1 --> A3["VC Advisor Agent"]
+        A1 -->|trends + pain points| A2
+        A2 -->|ranked opportunities| A3
+    end
+
+    subgraph TOOLS["Agent Tools"]
+        A1 --> T1["Scraper Tools"]
+        A2 --> T2["RAG Retriever Tool"]
+        A3 --> T3["System Prompts"]
+    end
+
+    subgraph SCRAPERS["Scrapers"]
+        T1 --> S1["HN Firebase API"]
+        T1 --> S2["Reddit PRAW"]
+        T1 --> S3["Product Hunt GraphQL"]
+        T1 --> S4["Indie Hackers HTML"]
+    end
+
+    subgraph RAG["RAG Pipeline"]
+        T2 --> DB[("ChromaDB - 4 collections")]
+        T2 --> BM["BM25 Index"]
+        T2 --> EM["Embeddings - all-MiniLM-L6-v2"]
     end
 
     subgraph LLM["LLM Providers"]
-        A3 --> L1["Ollama"]
-        A3 --> L2["Anthropic"]
+        A3 --> L1["Ollama - Local"]
+        A3 --> L2["Anthropic - Cloud"]
     end
 
-    style FE fill:#e3f2fd,stroke:#1565C0
-    style BE fill:#fff3e0,stroke:#E65100
-    style DATA fill:#f3e5f5,stroke:#6A1B9A
-    style LLM fill:#e8f5e9,stroke:#2E7D32
+    subgraph DATASTORE["Data Store"]
+        R2 --> SC["Scraped Trends Cache"]
+        R3 --> RAG
+    end
+
+    A3 -->|SSE stream| OUT["Business Proposals"]
+    OUT --> PROXY
+
+    style FRONTEND fill:#e3f2fd,stroke:#1565C0
+    style BACKEND fill:#fff3e0,stroke:#E65100
+    style CREW fill:#fce4ec,stroke:#c62828
+    style TOOLS fill:#f3e5f5,stroke:#6A1B9A
+    style SCRAPERS fill:#e8f5e9,stroke:#2E7D32
+    style RAG fill:#fff8e1,stroke:#f57f17
+    style LLM fill:#e0f7fa,stroke:#00695c
+    style DATASTORE fill:#efebe9,stroke:#4e342e
+```
+
+### Request Flow Sequence
+
+```mermaid
+sequenceDiagram
+    participant U as User Browser
+    participant NX as Next.js Proxy
+    participant API as FastAPI
+    participant CW as CrewAI
+    participant S1 as Trend Scraper
+    participant S2 as Synthesizer
+    participant S3 as VC Advisor
+    participant DB as ChromaDB
+    participant LLM as Ollama / Anthropic
+
+    U->>NX: POST /api/ideas/generate
+    NX->>API: Forward request
+    API->>CW: Kickoff CrewAI pipeline
+    API-->>U: SSE stream opened
+
+    activate CW
+    CW->>S1: Task 1: Scrape trends
+    S1->>S1: Scrape HN, Reddit, PH, IH
+    S1-->>S2: Trend report + pain points
+
+    CW->>S2: Task 2: Analyze with RAG
+    S2->>DB: Vector + BM25 search
+    DB-->>S2: Frameworks + case studies
+    S2-->>S3: Ranked opportunities
+
+    CW->>S3: Task 3: Generate proposals
+    S3->>LLM: Generate business plan
+    LLM-->>S3: Proposal content
+    S3-->>API: Final output
+    deactivate CW
+
+    API-->>U: SSE: type=result
+    API-->>U: SSE: type=done
+```
+
+### Data Layer Detail
+
+```mermaid
+graph LR
+    subgraph SOURCES["External Sources"]
+        PH["Product Hunt API"]
+        HN["Hacker News API"]
+        RD["Reddit PRAW"]
+        IH["Indie Hackers"]
+    end
+
+    subgraph INGEST["Ingestion"]
+        SC["Scraper Tools"]
+        SD["Seed Data JSON"]
+    end
+
+    subgraph STORE["Storage"]
+        CH[("ChromaDB")]
+        BM["BM25 Index"]
+        EM["Embeddings"]
+    end
+
+    subgraph QUERY["Query"]
+        VR["Vector Retriever"]
+        BR["BM25 Retriever"]
+        RRF["Reciprocal Rank Fusion"]
+    end
+
+    subgraph OUTPUT["Output"]
+        FR["Frameworks"]
+        PP["Pain Points"]
+        CS["Case Studies"]
+    end
+
+    PH --> SC
+    HN --> SC
+    RD --> SC
+    IH --> SC
+    SC --> CH
+    SD --> CH
+    CH --> EM
+    CH --> VR
+    BM --> BR
+    VR --> RRF
+    BR --> RRF
+    RRF --> FR
+    RRF --> PP
+    RRF --> CS
+
+    style SOURCES fill:#e8f5e9,stroke:#2E7D32
+    style STORE fill:#fff8e1,stroke:#f57f17
+    style QUERY fill:#f3e5f5,stroke:#6A1B9A
+    style OUTPUT fill:#e3f2fd,stroke:#1565C0
 ```
 
 ---
@@ -340,60 +382,38 @@ npm install && npm run dev
 
 Open **http://localhost:3000** -> Select a niche -> Click **Generate Ideas** -> Watch the 3 agents work in real-time via SSE streaming.
 
-### Setup Flow
-
-```mermaid
-graph TD
-    A["Clone repo"] --> B["cd backend"]
-    B --> C["cp .env.example .env"]
-    C --> D["uv sync"]
-    D --> E["uv run python -m rag.ingest"]
-    E --> F["Start backend on :8000"]
-    F --> G["Start Ollama"]
-    G --> H["cd frontend && npm install && npm run dev"]
-    H --> I["Open localhost:3000"]
-
-    style A fill:#4CAF50,color:#fff
-    style I fill:#2196F3,color:#fff
-```
-
 ---
 
 ## API
 
-### Endpoint Map
-
 ```mermaid
-graph TD
-    subgraph HEALTH["Health"]
-        H1["GET /api/health"]
-        H2["GET /api/stats"]
+graph LR
+    subgraph ENDPOINTS["REST API Endpoints"]
+        direction TB
+        H["GET /api/health"]
+        S["GET /api/stats"]
+        IG["POST /api/ideas/generate - SSE"]
+        IL["GET /api/ideas"]
+        IID["GET /api/ideas/:id"]
+        TL["GET /api/trends"]
+        TS["POST /api/trends/scrape"]
+        RQ["POST /api/rag/query"]
+        RI["POST /api/rag/ingest/seed"]
+        RB["GET /api/rag/browse/:collection"]
+        DOC["GET /docs - Swagger UI"]
     end
 
-    subgraph IDEAS["Ideas"]
-        I1["POST /api/ideas/generate"]
-        I2["GET /api/ideas"]
-        I3["GET /api/ideas/:id"]
-    end
-
-    subgraph TRENDS["Trends"]
-        T1["GET /api/trends"]
-        T2["POST /api/trends/scrape"]
-    end
-
-    subgraph RAG["RAG"]
-        R1["POST /api/rag/query"]
-        R2["POST /api/rag/ingest/seed"]
-        R3["GET /api/rag/browse/:col"]
-    end
-
-    DOCS["GET /docs - Swagger UI"]
-
-    style HEALTH fill:#4CAF50,color:#fff
-    style IDEAS fill:#2196F3,color:#fff
-    style TRENDS fill:#FF9800,color:#fff
-    style RAG fill:#9C27B0,color:#fff
-    style DOCS fill:#607D8B,color:#fff
+    style H fill:#4CAF50,color:#fff
+    style S fill:#4CAF50,color:#fff
+    style IG fill:#2196F3,color:#fff
+    style IL fill:#2196F3,color:#fff
+    style IID fill:#2196F3,color:#fff
+    style TL fill:#FF9800,color:#fff
+    style TS fill:#FF9800,color:#fff
+    style RQ fill:#9C27B0,color:#fff
+    style RI fill:#9C27B0,color:#fff
+    style RB fill:#9C27B0,color:#fff
+    style DOC fill:#607D8B,color:#fff
 ```
 
 ### Generate Ideas (SSE Stream)
@@ -408,26 +428,6 @@ curl -N -X POST http://127.0.0.1:8000/api/ideas/generate \
 data: {"type":"start","niche":"developer tools","id":"a1b2c3d4"}
 data: {"type":"result","id":"a1b2c3d4","content":"## LogLens AI\n\n### The Problem\n..."}
 data: {"type":"done","id":"a1b2c3d4"}
-```
-
-### SSE Event Flow
-
-```mermaid
-graph LR
-    A["Client POST /api/ideas/generate"] --> B["FastAPI receives request"]
-    B --> C["CrewAI starts agents"]
-    C --> D["SSE: type=start"]
-    D --> E["Agent 1 scrapes trends"]
-    E --> F["Agent 2 searches RAG"]
-    F --> G["Agent 3 generates proposals"]
-    G --> H["SSE: type=result"]
-    H --> I["SSE: type=done"]
-    I --> J["Client renders results"]
-
-    style A fill:#2196F3,color:#fff
-    style D fill:#FF9800,color:#fff
-    style H fill:#4CAF50,color:#fff
-    style I fill:#9C27B0,color:#fff
 ```
 
 ### Search RAG Knowledge Base
@@ -445,59 +445,29 @@ curl -X POST http://127.0.0.1:8000/api/rag/query \
 ### Hybrid Retrieval Pipeline
 
 ```mermaid
-graph TB
-    Q["Query: developer tools for log analysis"] --> VS["Vector Search"]
-    Q --> BM["BM25 Search"]
-    VS --> F["Reciprocal Rank Fusion"]
-    BM --> F
-    F --> R["Ranked Results"]
+flowchart TB
+    Q["Query: developer tools for log analysis"]
+
+    subgraph SEARCH["Dual Search"]
+        VS["Vector Search - ChromaDB cosine similarity"]
+        BM["BM25 Search - TF-IDF keyword matching"]
+    end
+
+    FUSION["Reciprocal Rank Fusion - score = sum of 1/(k+rank)"]
+
+    RANK["Ranked Results"]
+
+    Q --> VS
+    Q --> BM
+    VS --> FUSION
+    BM --> FUSION
+    FUSION --> RANK
 
     style Q fill:#4CAF50,stroke:#388E3C,color:#fff
     style VS fill:#2196F3,stroke:#1565C0,color:#fff
     style BM fill:#FF9800,stroke:#E65100,color:#fff
-    style F fill:#9C27B0,stroke:#6A1B9A,color:#fff
-    style R fill:#607D8B,stroke:#37474F,color:#fff
-```
-
-### RAG Data Model
-
-```mermaid
-classDiagram
-    class TrendData {
-        +String title
-        +String description
-        +String source
-        +List tags
-        +int upvotes
-        +String url
-    }
-
-    class Document {
-        +String id
-        +String content
-        +String title
-        +String category
-        +String source
-        +float[] embedding
-    }
-
-    class QueryResult {
-        +String document_id
-        +float score
-        +String content
-        +dict metadata
-    }
-
-    class Retriever {
-        +ChromaDB client
-        +BM25 index
-        +search(query, collection)
-        +hybrid_search(query, collection)
-    }
-
-    Document --> Retriever : indexed by
-    TrendData --> Document : converted to
-    Retriever --> QueryResult : returns
+    style FUSION fill:#9C27B0,stroke:#6A1B9A,color:#fff
+    style RANK fill:#607D8B,stroke:#37474F,color:#fff
 ```
 
 ### Seed Data
@@ -512,26 +482,24 @@ classDiagram
 
 ## LLM Configuration
 
-### Provider Selection Flow
-
 ```mermaid
-graph LR
-    ENV[".env file"] --> CONFIG["config.py"]
-    CONFIG --> CLIENT["ollama_client.py"]
-    CLIENT --> CHECK{"LLM_PROVIDER?"}
-    CHECK -->|ollama| O["Ollama Server"]
-    CHECK -->|anthropic| A["Anthropic API"]
-    O --> AGENT["CrewAI Agent"]
-    A --> AGENT
+flowchart LR
+    ENV[".env - LLM_PROVIDER"] --> CONFIG["config.py - reads env"]
+    CONFIG --> CLIENT["ollama_client.py - get_crewai_llm"]
+    CLIENT --> AGENT["CrewAI Agent .llm = LLM"]
+
+    subgraph PROVIDERS["Supported Providers"]
+        O["Ollama - deepseek-coder-v2 / llama3 / mistral"]
+        A["Anthropic - claude-sonnet-4"]
+    end
+
+    CLIENT --> O
+    CLIENT --> A
 
     style ENV fill:#607D8B,color:#fff
-    style CHECK fill:#FF9800,color:#fff
-    style O fill:#4CAF50,color:#fff
-    style A fill:#2196F3,color:#fff
-    style AGENT fill:#9C27B0,color:#fff
+    style O fill:#4CAF50,stroke:#388E3C,color:#fff
+    style A fill:#2196F3,stroke:#1565C0,color:#fff
 ```
-
-### Model Options
 
 | Provider | Model | Use Case |
 |----------|-------|----------|
