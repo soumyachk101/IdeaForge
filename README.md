@@ -142,65 +142,75 @@ sequenceDiagram
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph FRONTEND["Frontend - Next.js 14"]
-        F1["Generate Page - SSE streaming"]
-        F2["Ideas Gallery"]
-        F3["Trends Browser"]
-        F4["Knowledge Search"]
-        F5["API Client - lib/api.ts"]
-        F6["Next.js Proxy - /api/* to :8000"]
-        F1 --> F5
-        F2 --> F5
-        F3 --> F5
-        F4 --> F5
-        F5 --> F6
-    end
+```
+IDEAFORGE ARCHITECTURE
+======================
 
-    subgraph BACKEND["Backend - FastAPI + CrewAI"]
-        B1["FastAPI App - CORS + Lifespan"]
-        B2["Ideas Route - SSE stream"]
-        B3["Trends Route"]
-        B4["RAG Route"]
-        B1 --> B2
-        B1 --> B3
-        B1 --> B4
-
-        subgraph CREWAI["CrewAI Orchestration"]
-            C1["Trend Scraper Agent"]
-            C2["Synthesizer Agent"]
-            C3["VC Advisor Agent"]
-            C1 --> C2 --> C3
-        end
-
-        B2 --> CREWAI
-    end
-
-    subgraph DATA["Data Layer"]
-        D1[("ChromaDB - 4 collections")]
-        D2["Scrapers - HN / Reddit / PH / IH"]
-        D3["BM25 Index"]
-        D4["SentenceTransformers - all-MiniLM-L6-v2"]
-    end
-
-    subgraph LLM["LLM Layer"]
-        L1["Ollama - Local LLM"]
-        L2["Anthropic - Cloud API"]
-    end
-
-    F6 -->|HTTP + SSE| B1
-    C1 --> D2
-    C2 --> D1
-    C2 --> D3
-    C3 --> L1
-    C3 --> L2
-    D1 --- D4
-
-    style FRONTEND fill:#e3f2fd,stroke:#1565C0
-    style BACKEND fill:#fff3e0,stroke:#E65100
-    style DATA fill:#f3e5f5,stroke:#6A1B9A
-    style LLM fill:#e8f5e9,stroke:#2E7D32
++-----------------------------------------------------------------------+
+|                        FRONTEND (Next.js)                              |
+|                                                                       |
+|  +------------+  +------------+  +------------+  +-----------------+  |
+|  | Generate   |  |  Ideas     |  |  Trends    |  | Knowledge Base  |  |
+|  |  Page      |  | Gallery    |  | Browser    |  | (Search/Browse) |  |
+|  +-----+------+  +-----+------+  +-----+------+  +--------+--------+  |
+|        |               |              |                    |           |
+|        +---------------+--------------+--------------------+           |
+|                        |                                               |
+|                +-------+--------+                                      |
+|                |   API Client   |                                      |
+|                |   (lib/api.ts) |                                      |
+|                +-------+--------+                                      |
+|                        |                                               |
+|                +-------+--------+                                      |
+|                |  Next.js Proxy |                                      |
+|                | /api/* -> :8000|                                      |
+|                +-------+--------+                                      |
++------------------------+-----------------------------------------------+
+                         |
+                         | HTTP + SSE
+                         |
++------------------------+-----------------------------------------------+
+|                        |      BACKEND (FastAPI + CrewAI)               |
+|                +-------+--------+                                      |
+|                |   FastAPI App  |                                      |
+|                |   (api/main)   |                                      |
+|                +-------+--------+                                      |
+|                        |                                               |
+|    +-------------------+-------------------+                            |
+|    |                   |                   |                            |
+|    v                   v                   v                            |
+| +--------+    +------------+    +-------------+                        |
+| | Ideas  |    |  Trends    |    |    RAG      |                        |
+| | Route  |    |  Route     |    |   Route     |                        |
+| +---+----+    +-----+------+    +------+------+                        |
+|     |               |                    |                              |
+|     v               v                    v                              |
+| +--------------------------------------------------------------+       |
+| |                   CREWAI ORCHESTRATION                       |       |
+| |                                                              |       |
+| |  +----------+  +--------------+  +---------------------+    |       |
+| |  | Trend    |  | Synthesizer  |  |  VC/Monetization    |    |       |
+| |  | Scraper  |  | Agent        |  |  Advisor            |    |       |
+| |  | Agent    |  |              |  |                     |    |       |
+| |  +----+-----+  +------+-------+  +----------+----------+    |       |
+| |       |               |                     |               |       |
+| |       v               v                     v               |       |
+| |  +----------+  +--------------+  +---------------------+    |       |
+| |  | Scraper  |  | RAG Retriever|  |  System Prompts     |    |       |
+| |  | Tools    |  | Tool         |  |                     |    |       |
+| |  +----+-----+  +------+-------+  +---------------------+    |       |
+| +-------+---------------+--------------------------------------+       |
+|         |               |                                              |
+|         v               v                                              |
+|  +------------+  +--------------+                                      |
+|  | SCRAPERS   |  |  RAG PIPELINE|                                      |
+|  |            |  |              |                                      |
+|  | - HN API   |  | - ChromaDB   |                                      |
+|  | - Reddit   |  | - BM25       |                                      |
+|  | - PH API   |  | - Embeddings |                                      |
+|  | - IH HTML  |  | - RRF Fusion |                                      |
+|  +------------+  +--------------+                                      |
++-----------------------------------------------------------------------+
 ```
 
 ---
