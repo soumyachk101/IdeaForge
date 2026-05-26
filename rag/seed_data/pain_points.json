@@ -1,0 +1,98 @@
+[
+  {
+    "id": "pain_001",
+    "title": "Log analysis is too complex",
+    "category": "developer_tools",
+    "content": "I wish there was a simple tool that could parse and analyze my application logs without setting up a full ELK stack. Every time I have a production issue, I spend 30 minutes grepping through log files. Tools like Datadog are overkill for a solo developer. I just need something that can tail my logs, detect anomalies, and alert me on Slack.",
+    "source": "reddit",
+    "tags": ["logging", "devtools", "monitoring"]
+  },
+  {
+    "id": "pain_002",
+    "title": "No easy way to manage client feedback",
+    "category": "productivity",
+    "content": "As a freelance designer, I collect feedback from clients via email, Slack, and random Google Docs. There's no single place to track all feedback, mark items as done, and show clients the progress. Tools like Productboard are enterprise-priced. I need something simple: client uploads screenshot, marks areas, adds comments, I see a prioritized list.",
+    "source": "reddit",
+    "tags": ["freelance", "feedback", "design"]
+  },
+  {
+    "id": "pain_003",
+    "title": "API documentation is always outdated",
+    "category": "developer_tools",
+    "content": "I build APIs and the documentation is always out of date. Swagger/OpenAPI specs are verbose and nobody keeps them updated. I wish there was a tool that automatically generates API docs from my code comments and test files, and keeps them in sync with the actual deployed API.",
+    "source": "hacker_news",
+    "tags": ["api", "documentation", "devtools"]
+  },
+  {
+    "id": "pain_004",
+    "title": "CRM data entry takes hours",
+    "category": "business_tools",
+    "content": "As a real estate agent, I spend 2 hours every day entering data into our CRM. Every call, email, and showing needs to be logged manually. I've tried Zapier but it only handles simple cases. I need something that can listen to my calls (with consent), read my emails, and auto-populate the CRM with the right contact, property, and interaction details.",
+    "source": "reddit",
+    "tags": ["crm", "real-estate", "automation"]
+  },
+  {
+    "id": "pain_005",
+    "title": "SEO tools are too expensive for small sites",
+    "category": "marketing",
+    "content": "Ahrefs and SEMrush cost $100+/month which is way too much for my small blog/portfolio site. I just need basic keyword tracking, backlink monitoring, and content optimization suggestions. There should be a simple, affordable alternative for sites with under 10K monthly visitors.",
+    "source": "reddit",
+    "tags": ["seo", "marketing", "affordable"]
+  },
+  {
+    "id": "pain_006",
+    "title": "Meeting notes are a mess",
+    "category": "productivity",
+    "content": "After every client meeting, I have to manually type up notes, extract action items, and send summaries. Otter.ai transcribes but doesn't structure the output well. I need a tool that: (1) records/transcribes the meeting, (2) auto-extracts action items with owners and deadlines, (3) sends a formatted summary to all participants.",
+    "source": "indie_hackers",
+    "tags": ["meetings", "ai", "productivity"]
+  },
+  {
+    "id": "pain_007",
+    "title": "Invoice generation is tedious for freelancers",
+    "category": "business_tools",
+    "content": "Every month I spend 2 hours creating invoices in Google Docs, tracking who paid, and sending reminders. FreshBooks and QuickBooks are overkill and expensive. I just need a simple tool: add client, log hours, generate invoice PDF, send reminder. Should cost under $10/month.",
+    "source": "reddit",
+    "tags": ["invoicing", "freelance", "finance"]
+  },
+  {
+    "id": "pain_008",
+    "title": "No good tool for managing SaaS subscriptions",
+    "category": "business_tools",
+    "content": "As a startup, we have 40+ SaaS subscriptions and no idea what we're spending. Some are duplicated, some unused. I wish there was a simple dashboard that reads our bank/credit card statements, identifies SaaS charges, and alerts us about unused or duplicate subscriptions.",
+    "source": "hacker_news",
+    "tags": ["saas-management", "finance", "startup"]
+  },
+  {
+    "id": "pain_009",
+    "title": "Legal document review takes forever",
+    "category": "legal",
+    "content": "I'm a solo lawyer and reviewing contracts takes 3-4 hours per document. I need to check for standard clauses, flag unusual terms, and compare against our templates. There should be an AI tool specifically for legal document comparison that understands legal language, not just keyword matching.",
+    "source": "reddit",
+    "tags": ["legal", "ai", "document-review"]
+  },
+  {
+    "id": "pain_010",
+    "title": "Screenshot bug reports are useless",
+    "category": "developer_tools",
+    "content": "QA team sends me screenshots of bugs but they never include: browser version, console logs, network requests, or steps to reproduce. I spend 20 minutes per bug just figuring out what happened. I need a browser extension that captures all this context automatically when someone reports a bug.",
+    "source": "hacker_news",
+    "tags": ["bug-reporting", "qa", "devtools"]
+  },
+  {
+    "id": "pain_011",
+    "title": "Social media scheduling is fragmented",
+    "category": "marketing",
+    "content": "I manage social media for 5 clients and use different tools for each platform. Buffer for Twitter, Later for Instagram, native LinkedIn scheduler. I need ONE tool that schedules across all platforms, shows analytics in one dashboard, and costs under $30/month for multiple accounts.",
+    "source": "reddit",
+    "tags": ["social-media", "marketing", "scheduling"]
+  },
+  {
+    "id": "pain_012",
+    "title": "Onboarding new developers is painful",
+    "category": "developer_tools",
+    "content": "Every time we hire a new developer, it takes 2-3 weeks before they can run the project locally. README is outdated, env vars are undocumented, and there are always missing dependencies. I need a tool that creates a reproducible dev environment from our repo automatically.",
+    "source": "hacker_news",
+    "tags": ["devtools", "onboarding", "dx"]
+  }
+]

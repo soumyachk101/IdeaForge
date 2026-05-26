@@ -1,0 +1,72 @@
+[
+  {
+    "id": "freemium",
+    "title": "Freemium Model",
+    "category": "monetization",
+    "framework": "freemium",
+    "content": "The Freemium model offers a free basic tier with paid upgrades. Works best when: (1) the free version provides real value but has usage limits, (2) conversion to paid is driven by power users, (3) marginal cost of serving free users is low. Examples: Notion (free for personal, $10/user/month for teams), Figma (free for 3 projects, $15/month unlimited), Slack (free with message history limits). Best for: SaaS tools targeting individuals or small teams. Typical conversion rate: 2-5%. Revenue range: $10K-$500K MRR for niche tools.",
+    "pricing": "$0-$15/month per user",
+    "source": "seed_data",
+    "tech_stack": "Any web framework"
+  },
+  {
+    "id": "api_as_service",
+    "title": "API-as-a-Service",
+    "category": "monetization",
+    "framework": "api_usage_based",
+    "content": "API-as-a-Service charges developers per API call or based on usage tiers. Works best when: (1) you solve a complex technical problem (image processing, NLP, data enrichment), (2) developers prefer integrating via API over building from scratch, (3) you can achieve economies of scale. Examples: Stripe (2.9% + 30c per transaction), Twilio (per message/call), OpenAI (per token), Supabase (free tier + $25/month Pro). Best for: Developer tools, data services, AI/ML APIs. Typical pricing: $0.001-$0.01 per API call, or tiered plans $29-$299/month.",
+    "pricing": "$29-$299/month",
+    "source": "seed_data",
+    "tech_stack": "FastAPI/Express, Redis caching, rate limiting"
+  },
+  {
+    "id": "subscription",
+    "title": "Monthly Subscription",
+    "category": "monetization",
+    "framework": "subscription",
+    "content": "Monthly subscription is the most common SaaS model. Charges a recurring fee for continued access. Works best when: (1) the tool provides ongoing value (not one-time), (2) switching costs are moderate, (3) you can continuously add features. Examples: Basecamp ($99/month flat), Linear ($8/user/month), Cal.com ($15/user/month). Best for: Project management, CRM, analytics, monitoring. Typical range: $9-$99/month for micro-SaaS.",
+    "pricing": "$9-$99/month",
+    "source": "seed_data",
+    "tech_stack": "Stripe billing, any web framework"
+  },
+  {
+    "id": "one_time_purchase",
+    "title": "One-Time Purchase / Lifetime Deal",
+    "category": "monetization",
+    "framework": "one_time",
+    "content": "One-time purchase charges a single fee for lifetime access. Works best for: (1) tools with low ongoing server costs, (2) desktop apps or self-hosted software, (3) templates, boilerplates, and starter kits. Examples: Tailwind UI ($299 one-time), ShipFast ($199 boilerplate), Raycast Pro ($8/month but lifetime option at $99). Best for: Developer tools, templates, self-hosted software. Typical range: $49-$499. Risk: no recurring revenue, need constant new customers.",
+    "pricing": "$49-$499 one-time",
+    "source": "seed_data",
+    "tech_stack": "Gumroad, LemonSqueezy, or Paddle for payments"
+  },
+  {
+    "id": "marketplace_take_rate",
+    "title": "Marketplace / Take Rate",
+    "category": "monetization",
+    "framework": "marketplace",
+    "content": "Marketplace model takes a percentage of each transaction. Works best when: (1) you connect buyers and sellers, (2) you provide trust/escrow, (3) the market is fragmented. Examples: Gumroad (10% fee), Fiverr (20% from sellers), Upwork (10-20%), ProductHunt (for their shop). Best for: Connecting freelancers with clients, selling digital products, curated marketplaces. Typical take rate: 5-20%. High risk of disintermediation.",
+    "pricing": "5-20% per transaction",
+    "source": "seed_data",
+    "tech_stack": "Stripe Connect, any web framework"
+  },
+  {
+    "id": "vertical_saas",
+    "title": "Vertical SaaS for Non-Techies",
+    "category": "monetization",
+    "framework": "vertical_saas",
+    "content": "Vertical SaaS targets a specific industry with tailored features. Non-technical users pay premium prices for tools that understand their domain. Examples: Clio for lawyers ($39-$149/month), Dentrix for dentists, Buildertrend for contractors ($99/month). Key insight: non-techies will pay more for less complexity. They value: (1) industry-specific terminology, (2) compliance features, (3) templates for their use case, (4) phone support. Best for: Healthcare, legal, real estate, construction, accounting. Typical pricing: $29-$299/month.",
+    "pricing": "$29-$299/month",
+    "source": "seed_data",
+    "tech_stack": "Next.js, PostgreSQL, Stripe"
+  },
+  {
+    "id": "chrome_extension_b2b",
+    "title": "B2B Chrome Extension",
+    "category": "monetization",
+    "framework": "chrome_extension",
+    "content": "B2B Chrome Extensions augment existing workflows by adding features to tools people already use (Gmail, LinkedIn, Salesforce, HubSpot). Advantages: (1) zero onboarding friction - works where users already are, (2) easy distribution via Chrome Web Store, (3) high retention if deeply integrated. Examples: Loom (screen recording in Gmail), Grammarly (writing in any text field), Clearbit (enrichment in Salesforce). Best for: Sales teams, recruiters, support agents. Typical pricing: $10-$50/user/month. Key: must save at least 30 min/day to justify price.",
+    "pricing": "$10-$50/user/month",
+    "source": "seed_data",
+    "tech_stack": "Chrome Extension (Manifest V3), React, background service worker"
+  }
+]

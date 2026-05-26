@@ -1,0 +1,81 @@
+[
+  {
+    "id": "case_001",
+    "title": "Plausible Analytics",
+    "category": "analytics",
+    "content": "Privacy-focused web analytics alternative to Google Analytics. Founded 2019, bootstrapped. Revenue: $100K+/month. Sold for $5M on MicroAcquire. Tech stack: Elixir, Phoenix, ClickDB, PostgreSQL. Pricing: $9/month for 10K pageviews, scaling up. Key insight: positioned as privacy-first (GDPR compliant, no cookies) when Google Analytics was getting complex and privacy-hostile. Target: small to medium websites that care about privacy. Monetization: tiered subscription based on pageviews.",
+    "revenue": "$100K+/month",
+    "sale_price": "$5M",
+    "pricing": "$9-$99/month",
+    "tech_stack": "Elixir, Phoenix, ClickHouse, PostgreSQL",
+    "source": "microacquire",
+    "niche": "privacy analytics"
+  },
+  {
+    "id": "case_002",
+    "title": "Plausible-like Todoist Power-Up",
+    "category": "productivity",
+    "content": "A simple Chrome extension that adds time-tracking to Todoist. Built by a solo developer. Revenue: $3K MRR. Sold for $120K. Tech stack: Chrome Extension (Manifest V3), vanilla JS, Firebase. Pricing: $4/month or $36/year. Key insight: Todoist has 35M+ users but no native time tracking. The extension was the #1 rated time-tracking extension on Chrome Web Store. Minimal maintenance - only needed updates when Todoist changed their UI.",
+    "revenue": "$3K MRR",
+    "sale_price": "$120K",
+    "pricing": "$4/month",
+    "tech_stack": "Chrome Extension, vanilla JS, Firebase",
+    "source": "microacquire",
+    "niche": "productivity extensions"
+  },
+  {
+    "id": "case_003",
+    "title": "Transcript.lol",
+    "category": "ai_tools",
+    "content": "AI-powered meeting transcription and summarization tool. Targets remote teams. Revenue: $15K MRR. Tech stack: Next.js, OpenAI Whisper API, Supabase, Stripe. Pricing: $12/month for 10 hours transcription. Key insight: Otter.ai and Fireflies are good but expensive ($16.99+/month). This tool positioned as affordable alternative with better meeting summaries. GTM: Product Hunt launch (500+ upvotes), then SEO targeting 'meeting transcription tool' keywords.",
+    "revenue": "$15K MRR",
+    "pricing": "$12/month",
+    "tech_stack": "Next.js, OpenAI Whisper API, Supabase, Stripe",
+    "source": "product_hunt",
+    "niche": "meeting tools"
+  },
+  {
+    "id": "case_004",
+    "title": "Resend",
+    "category": "developer_tools",
+    "content": "Email API for developers. Founded 2022, YC W23. Revenue: $1M+ ARR. Pricing: free tier (100 emails/day), $20/month (50K emails). Tech stack: Next.js, Rust (email infrastructure), PostgreSQL, Redis. Key insight: SendGrid and Mailgun have terrible developer experience. Resend focused on beautiful docs, React email components, and modern API. GTM: developer Twitter, Hacker News, open-source React Email library that drove adoption.",
+    "revenue": "$1M+ ARR",
+    "pricing": "$20-$90/month",
+    "tech_stack": "Next.js, Rust, PostgreSQL, Redis",
+    "source": "hacker_news",
+    "niche": "email API"
+  },
+  {
+    "id": "case_005",
+    "title": "Cal.com",
+    "category": "productivity",
+    "content": "Open-source scheduling tool (Calendly alternative). Founded 2021. Revenue: $2M+ ARR. Pricing: free (self-hosted), $15/user/month (cloud). Tech stack: Next.js, Prisma, PostgreSQL, tRPC. Key insight: Calendly pricing ($10-$46/month) alienated developers and small teams. Cal.com went open-source-first, attracted developers who self-hosted, then upsold cloud hosting. GTM: open-source community, Product Hunt, developer advocacy.",
+    "revenue": "$2M+ ARR",
+    "pricing": "$15/user/month",
+    "tech_stack": "Next.js, Prisma, PostgreSQL, tRPC",
+    "source": "product_hunt",
+    "niche": "scheduling"
+  },
+  {
+    "id": "case_006",
+    "title": "Screen Studio",
+    "category": "productivity",
+    "content": "Beautiful screen recording tool for Mac. Solo developer (Elias). Revenue: $50K+/month. Pricing: $89 one-time (Pro $139). Tech stack: Swift, macOS native. Key insight: Loom and OBS are functional but produce ugly recordings. Screen Studio auto-zooms, adds smooth cursor animations, and makes recordings look professional. GTM: viral Twitter/X posts of beautiful recordings, Product Hunt #1 of the day. Minimal maintenance - native Mac app with no server costs.",
+    "revenue": "$50K+/month",
+    "pricing": "$89-$139 one-time",
+    "tech_stack": "Swift, macOS native",
+    "source": "twitter",
+    "niche": "screen recording"
+  },
+  {
+    "id": "case_007",
+    "title": "Dub.co",
+    "category": "developer_tools",
+    "content": "Open-source link management and shortener. Founded 2022. Revenue: $100K+ ARR. Pricing: free (self-hosted), $24/month (cloud Pro). Tech stack: Next.js, Turso (SQLite edge), Upstash Redis. Key insight: Bitly became enterprise-focused and expensive. Dub.co went open-source, added analytics, custom domains, and API. GTM: open-source GitHub stars, developer Twitter, indie hacker community.",
+    "revenue": "$100K+ ARR",
+    "pricing": "$24/month",
+    "tech_stack": "Next.js, Turso, Upstash Redis",
+    "source": "indie_hackers",
+    "niche": "link management"
+  }
+]
